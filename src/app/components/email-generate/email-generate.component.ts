@@ -9,6 +9,7 @@ import { EmailService } from '../../services/email-service.service';
 export class EmailGenerateComponent {
   email: string = '';
   timeRemaining: number = 0;
+  showCopySuccess = false;
 
   constructor(private emailService: EmailService) {}
 
@@ -19,13 +20,34 @@ export class EmailGenerateComponent {
       this.updateEmail();
     }, 1000);
   }
+  copyToClipboard() {
+    const emailInput = document.getElementById('email') as HTMLInputElement;
+
+    if (emailInput) {
+      emailInput.select();
+      document.execCommand('copy');
+      const textToCopy = emailInput.value;
+
+      navigator.clipboard
+        .writeText(textToCopy)
+        .then(() => {
+          this.showCopySuccess = true;
+          setTimeout(() => {
+            this.showCopySuccess = false;
+          }, 3000);
+        })
+        .catch((error) => {
+          console.error('Erro ao copiar texto: ', error);
+        });
+    }
+  }
   updateEmail() {
     const storageEmail = localStorage.getItem('@Temp_Email');
     if (storageEmail) {
       const emailInfo = JSON.parse(storageEmail);
       const expiresAt = new Date(emailInfo.expiresAt);
       const now = new Date();
-      console.log(now, expiresAt);
+
       if (expiresAt > now) {
         this.email = emailInfo.email;
         this.timeRemaining = Math.floor(

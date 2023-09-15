@@ -1,3 +1,29 @@
-<p>email-generate works!</p>
-<h1>o email é : {{ email }}</h1>
-<p>tempo: {{ timeRemaining }}</p>
+<main class="flex flex-col justify-center items-center w-10/12 mx-auto">
+  <div class="w-4/5 flex flex-col justify-center items-center">
+    <p class="text-sm my-2">Seu email temporario:</p>
+    <div class="flex">
+      <input
+        type="text"
+        name="email"
+        id="email"
+        [defaultValue]="email"
+        [disabled]="true"
+        class="w-4/5 border-2 border-blue-400 p-1 md:w-80"
+      />
+      <button class="px-2 border-2 border-blue-400" (click)="copyToClipboard()">
+        <img src="../../../assets/copy.png" alt="copiar" class="h-6" />
+      </button>
+    </div>
+    <div class="mt-2 text-green-500 font-bold" *ngIf="showCopySuccess">
+      Texto copiado com sucesso!
+    </div>
+  </div>
+  <div>
+    <p>tempo: {{ timeRemaining }}</p>
+    <button>refresh</button>
+  </div>
+  <div>
+    <p>Deseja ativar notificações?</p>
+    <button>Ativar notificações</button>
+  </div>
+</main>
