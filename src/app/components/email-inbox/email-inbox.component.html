@@ -1,1 +1,8 @@
-<p>email-inbox works!</p>
+<h2>Inbox</h2>
+<ul>
+  <li *ngFor="let message of mails">
+    <h1>Enviado por: {{ message.fromAddr }}</h1>
+    <h2>Assunto: {{ message.headerSubject }}</h2>
+    <p>{{ message.text }}</p>
+  </li>
+</ul>
