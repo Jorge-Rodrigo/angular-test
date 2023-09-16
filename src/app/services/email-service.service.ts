@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmailService {
   private corsAnywhereUrl = 'https://cors-anywhere.herokuapp.com/';
+  private newEmailSubject = new BehaviorSubject<boolean>(false);
+  newEmail$ = this.newEmailSubject.asObservable();
   constructor(private http: HttpClient) {}
 
   introduceSession(): Observable<any> {
@@ -23,5 +25,13 @@ export class EmailService {
 
     const fullUrl = this.corsAnywhereUrl + apiUrl;
     return this.http.get(fullUrl);
+  }
+
+  notifyNewEmail() {
+    this.newEmailSubject.next(true);
+  }
+
+  clearNewEmail() {
+    this.newEmailSubject.next(false);
   }
 }

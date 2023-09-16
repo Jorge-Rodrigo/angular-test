@@ -20,13 +20,13 @@
     </div>
   </div>
   <div class="sm:flex gap-2 border-t border-gray-600 mt-2 h-full">
-    <div class="border-r border-gray-600 sm:w-1/2">
+    <div class="border-r border-gray-600 sm:w-1/2 sm:h-96 sm:py-1">
       <h2 class="ml-2">Inbox</h2>
       <ul class="sm:hidden border-t border-gray-600" *ngIf="!modal">
         <li
           *ngFor="let message of mails"
           class="my-3 pl-2 border-b border-gray-600"
-          (click)="captureEmail(message)"
+          (click)="captureEmail(message, true)"
         >
           <h3 class="font-bold text-sm">{{ message.fromAddr }}</h3>
           <h2 class="font-semibold text-base">{{ message.headerSubject }}</h2>
@@ -37,7 +37,7 @@
         <li
           *ngFor="let message of mails"
           class="my-3 pl-2 border-b border-gray-600"
-          (click)="captureEmail2(message)"
+          (click)="captureEmail(message, false)"
         >
           <h3 class="font-bold text-sm">{{ message.fromAddr }}</h3>
           <h2 class="font-semibold text-base">{{ message.headerSubject }}</h2>
@@ -46,7 +46,7 @@
       </ul>
     </div>
     <div class="hidden sm:block sm:w-1/2">
-      <h2 class="sm:font-bold" *ngIf="selectedMail === null">
+      <h2 class="sm:font-bold sm:m-2" *ngIf="selectedMail === null">
         Não há emails abertos
       </h2>
       <div *ngIf="selectedMail !== null" class="p-2 h-full">
