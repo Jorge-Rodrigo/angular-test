@@ -34,7 +34,7 @@ Uma boa maneira de lidar com isso é usar um endereço de e-mail temporário se 
 ## Tela para Desktop
 
 ![Desktop](assets/desktop.png)
-
+ 
 ## Tela para Mobile
 
 A versão desktop deve ser criada e adaptada para exibir todos os elementos presentes na versão desktop.
