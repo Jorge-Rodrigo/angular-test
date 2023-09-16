@@ -1,8 +1,73 @@
-<h2>Inbox</h2>
-<ul>
-  <li *ngFor="let message of mails">
-    <h1>Enviado por: {{ message.fromAddr }}</h1>
-    <h2>Assunto: {{ message.headerSubject }}</h2>
-    <p>{{ message.text }}</p>
-  </li>
-</ul>
+<section>
+  <div
+    class="pb-2 border-2 border-red-700 w-52 mx-2 rounded p-2 bg-slate-600"
+    *ngIf="showNotifications"
+  >
+    <p class="text-white">Deseja ativar notificações?</p>
+    <div class="flex gap-1 my-1">
+      <button
+        (click)="enableNotifications()"
+        class="border-2 border-blue-400 bg-blue-500 text-white h-7 px-1"
+      >
+        Ativar
+      </button>
+      <button
+        (click)="closeNotification()"
+        class="border-2 border-red-500 bg-red-600 text-white h-7 px-1"
+      >
+        Fechar
+      </button>
+    </div>
+  </div>
+  <div class="sm:flex gap-2 border-t border-gray-600 mt-2 h-full">
+    <div class="border-r border-gray-600 sm:w-1/2">
+      <h2 class="ml-2">Inbox</h2>
+      <ul class="sm:hidden border-t border-gray-600" *ngIf="!modal">
+        <li
+          *ngFor="let message of mails"
+          class="my-3 pl-2 border-b border-gray-600"
+          (click)="captureEmail(message)"
+        >
+          <h3 class="font-bold text-sm">{{ message.fromAddr }}</h3>
+          <h2 class="font-semibold text-base">{{ message.headerSubject }}</h2>
+          <p class="truncate w-48 overflow-hidden">{{ message.text }}</p>
+        </li>
+      </ul>
+      <ul class="hidden sm:block border-t border-gray-600" *ngIf="!modal">
+        <li
+          *ngFor="let message of mails"
+          class="my-3 pl-2 border-b border-gray-600"
+          (click)="captureEmail2(message)"
+        >
+          <h3 class="font-bold text-sm">{{ message.fromAddr }}</h3>
+          <h2 class="font-semibold text-base">{{ message.headerSubject }}</h2>
+          <p class="truncate w-48 overflow-hidden">{{ message.text }}</p>
+        </li>
+      </ul>
+    </div>
+    <div class="hidden sm:block sm:w-1/2">
+      <h2 class="sm:font-bold" *ngIf="selectedMail === null">
+        Não há emails abertos
+      </h2>
+      <div *ngIf="selectedMail !== null" class="p-2 h-full">
+        <div>
+          <h3 class="font-bold text-lg my-2 sm:w-1/2">
+            {{ selectedMail!.headerSubject }}
+          </h3>
+          <p class="bg-white p-2">{{ selectedMail!.text }}</p>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="modal" class="sm:hidden p-2 h-full">
+      <button (click)="closeEmail()">
+        <img src="../../../assets/return.png" alt="" class="h-5" />
+      </button>
+      <div>
+        <h3 class="font-bold text-lg my-2">
+          {{ selectedMail!.headerSubject }}
+        </h3>
+        <p class="bg-white p-2">{{ selectedMail!.text }}</p>
+      </div>
+    </div>
+  </div>
+</section>

@@ -18,7 +18,13 @@ interface Email {
 export class EmailInboxComponent {
   email: string = '';
   mails: Email[] = [];
+  selectedMail: Email | null = null;
+  showNotifications: boolean = true;
+  modal = false;
   constructor(private emailService: EmailService) {}
+  closeNotification(): void {
+    this.showNotifications = false;
+  }
 
   ngOnInit(): void {
     const storageEmail = localStorage.getItem('@Temp_Email');
@@ -51,5 +57,35 @@ export class EmailInboxComponent {
         }
       }
     });
+  }
+  enableNotifications() {
+    if ('Notification' in window) {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          const notification = new Notification('Novo Email', {
+            body: 'Você recebeu um novo email em sua conta temporária.',
+            icon: 'caminho-para-o-ícone.png',
+          });
+        } else if (permission === 'denied') {
+          console.log('Permissão para notificações negada.');
+        }
+      });
+    } else {
+      console.log('Notificações não suportadas neste navegador.');
+    }
+  }
+  captureEmail(email: Email) {
+    this.selectedMail = email;
+    this.modal = true;
+    console.log(this.selectedMail);
+  }
+  captureEmail2(email: Email) {
+    this.selectedMail = email;
+
+    console.log(this.selectedMail);
+  }
+  closeEmail() {
+    this.modal = false;
+    this.selectedMail = null;
   }
 }
