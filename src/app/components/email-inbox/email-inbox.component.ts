@@ -24,17 +24,31 @@ export class EmailInboxComponent {
   modal: boolean = false;
   mailCount: number = 0;
   previousMailCount: number = 0;
-  private emailSubscription!: Subscription;
+  private emailSubscriptionNewEmail!: Subscription;
+  private emailSubscriptionCurrentEmail!: Subscription;
 
   constructor(private emailService: EmailService) {}
 
-  closeNotification(): void {
-    this.showNotifications = false;
-  }
   ngOnInit(): void {
-    this.emailSubscription = this.emailService.newEmail$.subscribe(() => {
-      this.enableNotifications();
-    });
+    const storageEmailCountInfo = localStorage.getItem('@Temp_Email_Count');
+    if (storageEmailCountInfo) {
+      const emailCountInfo = JSON.parse(storageEmailCountInfo);
+      this.previousMailCount = emailCountInfo.previousMailCount;
+      this.mailCount = emailCountInfo.mailCount;
+    }
+    this.emailSubscriptionNewEmail = this.emailService.newEmail$.subscribe(
+      () => {
+        this.enableNotifications();
+      }
+    );
+
+    this.emailSubscriptionCurrentEmail =
+      this.emailService.currentEmail$.subscribe((email) => {
+        this.email = email;
+        this.selectedMail = null;
+        this.requestMails();
+      });
+
     this.requestMails();
 
     setInterval(() => {
@@ -67,13 +81,21 @@ export class EmailInboxComponent {
             }
           }
         }
-        if (emailMails.length > 0) {
+        if (emailMails.length >= 0) {
           if (this.mailCount > this.previousMailCount) {
             this.emailService.notifyNewEmail();
           }
 
           this.previousMailCount = this.mailCount;
           this.mails = emailMails;
+          const mailsCountInfo = {
+            previousMailCount: this.previousMailCount,
+            mailCount: this.mailCount,
+          };
+          localStorage.setItem(
+            '@Temp_Email_Count',
+            JSON.stringify(mailsCountInfo)
+          );
           this.mailCount = emailMails.length;
         }
       }
@@ -84,7 +106,6 @@ export class EmailInboxComponent {
       if ('Notification' in window) {
         Notification.requestPermission().then((permission) => {
           if (permission === 'granted') {
-            this.closeNotification();
             const notification = new Notification('Novo Email', {
               body: 'Você recebeu um novo email em sua conta temporária.',
             });
@@ -97,19 +118,21 @@ export class EmailInboxComponent {
       }
     }
   }
-
+  closeNotification(): void {
+    this.showNotifications = false;
+  }
   captureEmail(email: Email, mobile: boolean) {
     this.selectedMail = email;
     if (mobile) {
       this.modal = true;
     }
-    console.log(this.selectedMail);
   }
   closeEmail() {
     this.modal = false;
     this.selectedMail = null;
   }
   ngOnDestroy(): void {
-    this.emailSubscription.unsubscribe();
+    this.emailSubscriptionNewEmail.unsubscribe();
+    this.emailSubscriptionCurrentEmail.unsubscribe();
   }
 }

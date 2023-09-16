@@ -74,6 +74,7 @@ export class EmailGenerateComponent {
         this.email = newEmail;
         const now = new Date();
         this.timeRemaining = Math.floor((expiresDate - now.getTime()) / 1000);
+        this.emailService.updateCurrentEmail(this.email);
       }
     });
   }

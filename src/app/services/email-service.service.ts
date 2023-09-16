@@ -9,6 +9,9 @@ export class EmailService {
   private corsAnywhereUrl = 'https://cors-anywhere.herokuapp.com/';
   private newEmailSubject = new BehaviorSubject<boolean>(false);
   newEmail$ = this.newEmailSubject.asObservable();
+  private currentEmailSubject = new BehaviorSubject<string>('');
+  currentEmail$ = this.currentEmailSubject.asObservable();
+
   constructor(private http: HttpClient) {}
 
   introduceSession(): Observable<any> {
@@ -33,5 +36,8 @@ export class EmailService {
 
   clearNewEmail() {
     this.newEmailSubject.next(false);
+  }
+  updateCurrentEmail(email: string) {
+    this.currentEmailSubject.next(email);
   }
 }
